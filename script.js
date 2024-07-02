@@ -79,7 +79,7 @@ const playMusic = (track, pause = false) => {
     if (!pause) {
         currentSong.play();
         play.src = "img/svgs/pause.svg";
-        document.querySelector(".currSongInfo").innerHTML = `<video autoplay loop class="border" src="img/videoplayback.webm" width="60px" height="60px" alt="MusicVideo"></video>
+        document.querySelector(".currSongInfo").innerHTML = `<video autoplay loop class="border" src="videoplayback.webm" width="60px" height="60px" alt="MusicVideo"></video>
             <div class="songInfo normalFont">
                 <h3 class="white normalFont ">${track.replaceAll("%20", " ")}</h3>
                 <h5 class="greyFontColor normalFont">Ronit...</h5>
