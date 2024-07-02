@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Web Player: Music for everyone</title>
+    <link rel="icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="utilities.css">
+</head>
+
+<body>
+    <div class="main flex">
+            <div class="left ">
+                <div class="home_container greyBackground border">
+                    <div class="homeBtn greyFontColor "><img class="homeBtn" src="img/svgs/home.svg" alt="Home" title="Home" /> Home</div>
+                    <div class="searchBtn greyFontColor"><img src="img/svgs/search.svg" alt="Search" title="Search" />Search</div>
+                </div>
+                <div class="library_container greyBackground border">
+                    <div class="libraryBtn  greyFontColor"><img src="img/svgs/librarybtn.svg" alt="playlist">Your Library</div>
+                    <img class="close" src="img/svgs/close.svg"></img>
+                    <div class="songList">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right greyBackground border">
+                <nav class="navBar">
+                    <img class="logo" src="img/svgs/logo.svg" alt="logo" />
+                    <div class="premiumPlans">
+                        <div class="appInstall"><img src="img/svgs/download.svg" /> Install App</div>
+                        <div class="logIn" title="Guest Mode">G</div>
+                    </div>
+                </nav>
+                <div class="playList"></div>
+            </div>
+    </div>
+
+    <div class="playBar ">
+        <div class="currSongInfo">
+            
+        </div>
+        <div class="playformat">
+            <div class="playPause ">
+                <img src="img/svgs/previous.svg" alt="previous" class="previous">
+                <img src="img/svgs/play.svg" alt="play" class="play">
+                <img src="img/svgs/next.svg" alt="next" class="next">
+            </div>
+            <div class="seekBar ">
+                <h5 class="currtime greyFontColor normalFont">00:00</h5>
+                <div class="progress"></div>
+                <div class="circle"></div>
+                <h5 class="endtime greyFontColor normalFont">00:00</h5>
+            </div>
+        </div>
+        <div class="volume ">
+            <img class="download margin" src="img/svgs/download.svg" />
+            <img class="volImg" src="img/svgs/volume.svg" alt="volume" />
+            <div class="volBar"><div class="Volprogress"></div></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

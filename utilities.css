@@ -1,0 +1,69 @@
+@font-face {
+    font-family: 'myFont';
+    src: url('fonts/font.woff2') format('woff2'),
+        url('fonts/font_bold.woff2') format('woff2'),
+        url('fonts/font_regular.woff2') format('woff2');
+}
+
+.normalFont {
+    font-weight: normal;
+}
+
+.bolderFont {
+    font-weight: 700;
+}
+.bolder{
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.greyBackground {
+    background-color: #121112;
+}
+
+.flex {
+    display: flex;
+}
+
+.greyFontColor {
+    color: rgb(166, 166, 167);
+}
+
+.white {
+    color: white;
+}
+
+.margin {
+    margin: 10px;
+}
+
+.border {
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #333;
+    /* Dark color for the thumb */
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #222;
+    /* Dark color for the track */
+}
+.invert{
+    filter: invert(1);
+}
+.highlight{
+    background-color: rgb(35, 36, 36);
+
+}
+.song-highlight{
+    background-color: rgb(35, 36, 36);
+}
+
+

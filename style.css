@@ -1,0 +1,294 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'myFont', Arial, Helvetica, sans-serif;
+
+}
+
+body {
+    background-color: rgb(3, 3, 3);
+}
+
+.navBar {
+    height: 80px;
+     margin-right:12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    height: 42px;
+    width: 136px;
+    margin: 16px 12px;
+}
+.premiumPlans{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.appInstall{
+    font-weight: 700;
+    color: rgb(166, 166, 167);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    width: 136px;
+    gap: 8px;
+    height: 40px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+.logIn {
+    width: 28px;
+    height: 28px;
+    background-color: rgb(30, 214, 97);
+    border-radius: 50%;
+    border: 6px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+.card {
+    width: 194px;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 16px 10px;
+    position: relative;
+}
+.playlistplay{
+    position: absolute;
+    width: 65px;
+    height: 56px;
+    top: 168px;
+    right: 6px;
+    transition: ease-out 0.3s;
+    opacity: 0;
+    cursor: pointer;
+    filter: drop-shadow(2px 4px 2px rgb(39, 38, 38));
+}
+.card:hover{
+    background-color: rgb(22,23,23);
+    .playlistplay{
+        opacity: 1;
+        top: 146px;
+    }
+    cursor: pointer;
+}
+.playlistplay:hover{
+    height: 58px;
+}
+.cover{
+    width: 100%;
+}
+.card img {
+    display: block;
+    border-radius: 8px;
+}
+.card-content {
+    padding: 12px 8px;
+}
+.playlist-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: rgb(255, 255, 255);
+}
+.playList {
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: 72vh;
+}
+.artist-names {
+    font-size: 14px;
+    color: rgb(166,166,167);
+}
+.left {
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+    width: 24rem;
+    max-height: 86vh;
+}
+
+.home_container {
+    padding: 24px;
+    font-weight: 700;
+}
+
+.homeBtn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+}
+
+.searchBtn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.library_container {
+    height: 80vh;
+    margin-top: 8px;
+    position: relative;
+}
+
+.libraryBtn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 24px;
+    font-weight: 700;
+
+}
+
+.close {
+    margin: 24px;
+    position: absolute;
+    right: 4px;
+    top: 2px;
+}
+.songList {
+    overflow: auto;
+}
+.songList ul {
+    padding: 0 12px;
+}
+.songList ul li {
+    list-style-type: decimal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px 0;
+    border: 1px solid rgba(146, 143, 143, 0.491);
+    margin: 12px 0;
+    padding: 13px;
+    border-radius: 5px;
+}
+.songList ul li:hover{
+    background-color: rgb(22,23,23);
+    cursor: pointer;
+}
+.songList .info {
+    font-size: 13px;
+    width: 234px;
+    margin: 4px;
+}
+.playnow{
+    text-align: center;
+}
+
+.info div {
+    word-break: break-all;
+}
+.right {
+    width: 80vw;
+    height: 86vh;
+    margin: 8px 8px 0px 0px;
+    flex-grow: 1;
+}
+
+.playBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    height: 12vh;
+    width: 97vw;
+    margin: 0px 20px;
+}
+
+.playPause {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: absolute;
+    left: 46vw;
+    top: 6px;
+}
+
+.seekBar {
+    width: 42vw;
+    position: relative;
+    height: 4px;
+    background-color: rgb(77, 76, 76);
+    bottom: -16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.seekBar:hover .progress {
+    background-color: rgb(30, 214, 97);
+}
+
+.seekBar:hover .circle {
+    opacity: 1;
+}
+
+.progress{
+    background-color: white;
+    height: 4px;
+    border-radius: 8px;
+    width: 0%;
+}
+.circle {
+    opacity: 0;
+    position: absolute;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    top: -3px;
+}
+
+.currtime {
+    position: absolute;
+    top: -6px;
+    left: -44px;
+}
+
+.endtime {
+    position: absolute;
+    top: -6px;
+    right: -44px;
+}
+
+.currSongInfo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 250px;
+}
+
+.volume {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.volume>img{
+    cursor: pointer;
+}
+.volBar {
+    background-color: rgb(77, 76, 76);
+    width: 122px;
+    height: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.Volprogress{
+    background-color: white;
+    height: 4px;
+    border-radius: 8px;
+    width: 0%;
+}
