@@ -93,7 +93,7 @@ const playMusic = (track, pause = false) => {
 
 async function displayAlbum() {
     console.log("displaying album");
-    let a = await fetch(`/songs/`);
+    let a = await fetch(`songs/`);
     let response = await a.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -103,7 +103,7 @@ async function displayAlbum() {
         if (e.href.includes(`/songs`)) {
             let folder = e.href.split("/").slice(-2)[0];
             // Metadata about the folder
-            let a = await fetch(`/songs/${folder}/info.json`);
+            let a = await fetch(`songs/${folder}/info.json`);
             let response = await a.json();
             // Update card
             card.innerHTML += `<div data-folder="${folder}" class="card">
@@ -132,7 +132,7 @@ async function main() {
     await displayAlbum();
 
     // Get the list of all the songs
-    await getSongs("songs/arjit_singh");
+    await getSongs("songs/arjit_singh/");
     playMusic(songs[0], true);
 
     // Attach an event listener to play, next and previous
