@@ -23,121 +23,115 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     currFolder = folder;
-    let a = await fetch(`/${folder}/`);
-    let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let as = div.querySelectorAll("a");
-    songs = [];
-    for (const element of as) {
-        if (element.href.endsWith(".mp3")) {
-            songs.push(decodeURIComponent(element.href.split(`/${folder}/`)[1].replace(/\+/g, ' ')));
+    try {
+        let response = await fetch(`/${folder}/`);
+        let html = await response.text();
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        let anchors = tempDiv.querySelectorAll('a');
+        songs = [];
+        anchors.forEach(anchor => {
+            if (anchor.href.endsWith(".mp3")) {
+                songs.push(decodeURIComponent(anchor.href.split(`/${folder}/`)[1]));
+            }
+        });
+
+        // Display songs in playlist
+        let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
+        songUL.innerHTML = "";
+        songs.forEach(song => {
+            songUL.innerHTML += `<li class="song">
+                                    <img width="40" class="invert" src="img/svgs/music.svg" alt="">
+                                    <div class="info greyFontColor">
+                                        <div>${decodeURIComponent(song.replace(/\+/g, ' '))}</div>
+                                        <div>Divine, BadboyRonit, Dk....</div>
+                                    </div>
+                                    <div class="playnow greyFontColor">
+                                        <span class="normalFont">Play Now</span>
+                                        <img src="img/svgs/play.svg" alt="">
+                                    </div>
+                                </li>`;
+        });
+
+        // Attach click event listeners to each song
+        document.querySelectorAll('.song').forEach(song => {
+            song.addEventListener('click', function () {
+                playMusic(song.querySelector('.info div').textContent.trim());
+            });
+        });
+
+        // Highlight the first song by default
+        if (songs.length > 0) {
+            document.querySelector('.song').classList.add('song-highlight');
         }
-    }
 
-    // Show all the songs in the playlist
-    let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
-
-    songUL.innerHTML = "";
-    for (const song of songs) {
-        songUL.innerHTML += `<li class= "song"><img width="40" class="invert" src="img/svgs/music.svg" alt="">
-                                <div class="info greyFontColor">
-                                    <div>${song.replaceAll("%20", " ")}</div>
-                                    <div>Divine, BadboyRonit, Dk....</div>
-                                </div>
-                                <div class="playnow greyFontColor">
-                                    <span class="normalFont">Play Now</span>
-                                    <img src="img/svgs/play.svg" alt="">
-                                </div></li>`;
+        return songs;
+    } catch (error) {
+        console.error('Error fetching songs:', error);
     }
-    // Attach an event listener to each song
-    Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e => {
-        e.addEventListener("click", element => {
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
-        });
-    });
-
-    // Attach click event listener to all songs for highlighting
-    document.querySelectorAll('.song').forEach(song => {
-        song.addEventListener('click', function (event) {
-            event.stopPropagation(); // Prevent the playlist click event from firing
-            // Remove highlight from all songs
-            document.querySelectorAll('.song').forEach(s => s.classList.remove('song-highlight'));
-            // Highlight the clicked song
-            this.classList.add('song-highlight');
-        });
-    });
-    // Highlight the first song by default
-    if (songs.length > 0) {
-        let firstSongElement = document.querySelector('.song');
-        firstSongElement.classList.add('song-highlight');
-    }
-    return songs;
 }
 
 const playMusic = (track, pause = false) => {
     currentSong.src = `/${currFolder}/` + track;
     if (!pause) {
         currentSong.play();
-        // Update the UI with current song info
+        play.src = "img/svgs/pause.svg";
         document.querySelector(".currSongInfo").innerHTML = `<video autoplay loop class="border" src="videoplayback.mp4" width="60px" height="60px" alt="MusicVideo"></video>
             <div class="songInfo normalFont">
                 <h3 class="white normalFont">${decodeURIComponent(track)}</h3>
                 <h5 class="greyFontColor normalFont">Ronit...</h5>
             </div>`;
     } else {
-        // Handle pause state UI updates
         document.querySelector(".currtime").innerHTML = "00:00";
         document.querySelector(".endtime").innerHTML = "00:00";
     }
 };
 
-
 async function displayAlbum() {
-    console.log("displaying album");
-    let a = await fetch(`songs/`);
-    let response = await a.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let anchors = div.querySelectorAll("a");
-    let card = document.querySelector(".playList");
-    for (const e of anchors) {
-        if (e.href.includes(`/songs`)) {
-            let folder = e.href.split("/").slice(-2)[0];
-            // Metadata about the folder
-            let a = await fetch(`songs/${folder}/info.json`);
-            let response = await a.json();
-            // Update card
-            card.innerHTML += `<div data-folder="${folder}" class="card">
-            <img class="playlistplay" src="img/svgs/playlistplay.svg">
-            <img class="cover" src="/songs/${folder}/cover.jpeg">
-            <div class="card-content ">
-                <div class="playlist-name">${response.title}</div>
-                <div class="artist-names">${response.artist}</div>
-            </div>
-            </div>`;
-            // Load songs
-            // Load the playlist whenever card is clicked
-            document.querySelectorAll(".card").forEach(e => {
-                e.addEventListener("click", async item => {
-                    console.log("Fetching Songs");
-                    songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
-                    playMusic(songs[0]);
+    try {
+        let response = await fetch(`songs/`);
+        let html = await response.text();
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        let anchors = tempDiv.querySelectorAll('a');
+        let card = document.querySelector(".playList");
+        for (const anchor of anchors) {
+            if (anchor.href.includes(`/songs/`)) {
+                let folder = anchor.href.split("/").slice(-2)[0];
+                let infoResponse = await fetch(`songs/${folder}/info.json`);
+                let infoData = await infoResponse.json();
+                card.innerHTML += `<div data-folder="${folder}" class="card">
+                                    <img class="playlistplay" src="img/svgs/playlistplay.svg">
+                                    <img class="cover" src="/songs/${folder}/cover.jpeg">
+                                    <div class="card-content">
+                                        <div class="playlist-name">${infoData.title}</div>
+                                        <div class="artist-names">${infoData.artist}</div>
+                                    </div>
+                                </div>`;
+
+                // Load songs when card is clicked
+                document.querySelectorAll(".card").forEach(card => {
+                    card.addEventListener("click", async () => {
+                        songs = await getSongs(`songs/${card.dataset.folder}`);
+                        playMusic(songs[0]);
+                    });
                 });
-            });
+            }
         }
+    } catch (error) {
+        console.error('Error displaying albums:', error);
     }
 }
 
 async function main() {
-    // Display all the albums on the page
+    // Display all albums on the page
     await displayAlbum();
 
-    // Get the list of all the songs
+    // Get initial list of songs (example path provided)
     await getSongs("songs/arjit_singh/");
     playMusic(songs[0], true);
 
-    // Attach an event listener to play, next and previous
+    // Attach event listeners
     play.addEventListener("click", () => {
         if (currentSong.paused) {
             currentSong.play();
@@ -148,7 +142,7 @@ async function main() {
         }
     });
 
-    // Listen for timeupdate event
+    // Timeupdate event listener
     currentSong.addEventListener("timeupdate", () => {
         document.querySelector(".currtime").innerHTML = `${secondsToMinutesSeconds(currentSong.currentTime)}`;
         document.querySelector(".endtime").innerHTML = `${secondsToMinutesSeconds(currentSong.duration)}`;
@@ -157,152 +151,87 @@ async function main() {
         document.querySelector(".progress").style.width = per;
     });
 
-    // Add an event listener to seekbar
+    // Seekbar event listener
     seekBar.addEventListener("click", e => {
         let percent = (e.offsetX / e.currentTarget.getBoundingClientRect().width) * 100;
         document.querySelector(".circle").style.left = percent + "%";
         document.querySelector(".progress").style.width = percent + "%";
-        currentSong.currentTime = ((currentSong.duration) * percent) / 100;
+        currentSong.currentTime = (currentSong.duration * percent) / 100;
     });
 
-    //**********************************************************************************************************************************/
-    // Add an event listener for hamburger
-    let originalContent = document.querySelector(".left").innerHTML; // Store the original content
-    let isCrossClicked = false;
-
-    // Function to restore original content
-    function restoreOriginalContent() {
-        document.querySelector(".left").innerHTML = originalContent;
-        document.querySelector(".left").style.width = "22vw";
-        isCrossClicked = false;
-        attachEventListeners(); // Reattach event listeners
-    }
-
-    // Function to attach event listeners
-    function attachEventListeners() {
-        // Attach event listener for the cross button
-        const closeBtn = document.querySelector(".close");
-        if (closeBtn) {
-            closeBtn.addEventListener("click", () => {
-                console.log("cross button clicked");
-                document.querySelector(".left").innerHTML = `<div class="home_container greyBackground border bolder">
-                    <div class="homeBtn greyFontColor"><img src="img/svgs/home.svg" alt="Home" title="Home" /></div>
-                    <div class="searchBtn greyFontColor"><img src="img/svgs/search.svg" alt="Search" title="Search" /></div>
-                </div>
-                <div class="library_container greyBackground border">
-                    <div class="libraryBtn greyFontColor bolder"><img src="img/svgs/librarybtn.svg" alt="playlist"></div>
-                </div>`;
-                document.querySelector(".left").style.width = "auto";
-                isCrossClicked = true;
-                attachEventListeners(); // Reattach event listeners for the new content
-            });
-        }
-
-        // Attach event listener for the library button
-        const libraryBtn = document.querySelector(".libraryBtn");
-        if (libraryBtn) {
-            libraryBtn.addEventListener("click", () => {
-                console.log("library button clicked");
-                if (isCrossClicked) {
-                    restoreOriginalContent();
-                }
-            });
-        }
-    }
-
-    // Attach initial event listeners
-    attachEventListeners();
-    //**********************************************************************************************************************************/
-
-    // Add an event listener to previous
+    // Previous button event listener
     previous.addEventListener("click", () => {
         currentSong.pause();
-        console.log("Previous clicked");
         let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
-        if ((index - 1) >= 0) {
+        if (index > 0) {
             playMusic(songs[index - 1]);
         } else {
-            playMusic(songs[index]);
+            playMusic(songs[songs.length - 1]);
         }
     });
 
-    // Add an event listener to next
+    // Next button event listener
     next.addEventListener("click", () => {
         currentSong.pause();
-        console.log("Next clicked");
         let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
-        if ((index + 1) < songs.length) {
+        if (index < songs.length - 1) {
             playMusic(songs[index + 1]);
         } else {
             playMusic(songs[0]);
         }
     });
 
-    // Add event listener for volume bar
+    // Volume bar event listener
     document.querySelector(".volBar").addEventListener("click", (e) => {
         let val = (e.offsetX / e.target.getBoundingClientRect().width);
         currentSong.volume = val;
         document.querySelector(".Volprogress").style.width = val * 100 + "%";
-        if (currentSong.volume > 0) {
-            volImg.src = volImg.src.replace("mute.svg", "volume.svg");
-        }
+        volImg.src = val > 0 ? "img/svgs/volume.svg" : "img/svgs/mute.svg";
     });
 
-    // Add event listener to mute the track
+    // Mute button event listener
     volImg.addEventListener("click", e => {
-        if (e.target.src.includes("volume.svg")) {
-            e.target.src = e.currentTarget.src.replace("volume.svg", "mute.svg");
+        if (currentSong.volume > 0) {
             currentSong.volume = 0;
             document.querySelector(".Volprogress").style.width = 0 + "%";
+            volImg.src = "img/svgs/mute.svg";
         } else {
-            e.target.src = e.currentTarget.src.replace("mute.svg", "volume.svg");
-            currentSong.volume = 0.50;
+            currentSong.volume = 0.5;
             document.querySelector(".Volprogress").style.width = 50 + "%";
+            volImg.src = "img/svgs/volume.svg";
         }
     });
-    document.querySelector(".Volprogress").style.width = 50 + "%";
 
-    // Add event listener for download
+    // Download button event listener
     document.querySelector(".download").addEventListener('click', () => {
-        // Get the file name and extension
-        const fileName = currentSong.src.split('/').pop(); // Change this to the actual file name
-        // Generate the file URL based on the file name and extension
-        const fileUrl = `/songs/${currFolder}/${fileName}`; // Assuming the files are in the 'files' folder
+        const fileName = currentSong.src.split('/').pop();
+        const fileUrl = `/${currFolder}/${fileName}`;
 
-        // Create a temporary <a> element for downloading
         const a = document.createElement('a');
         a.href = fileUrl;
         a.download = fileName;
-
-        // Append the <a> element to the document body
         document.body.appendChild(a);
-
-        // Trigger the click event on the <a> element to initiate the download
         a.click();
-
-        // Remove the <a> element from the document body
         document.body.removeChild(a);
     });
 
+    // Reload page on home button click
     document.querySelector(".homeBtn").addEventListener('click', () => {
-        // Reload the page
         location.reload();
     });
 
-    // Add click event listener to the install button
-    document.querySelector(".appInstall").addEventListener('click', function () {
-        // Redirect to the Spotify download URL
+    // Open Spotify download link on install button click
+    document.querySelector(".appInstall").addEventListener('click', () => {
         window.open('https://open.spotify.com/download', '_blank');
     });
 
-    // Add click event listener to all playlists
+    // Highlight clicked playlist
     document.querySelectorAll('.card').forEach(playlist => {
         playlist.addEventListener('click', function () {
-            // Remove highlight from all playlists
             document.querySelectorAll('.card').forEach(pl => pl.classList.remove('highlight'));
-            // Highlight the clicked playlist
             this.classList.add('highlight');
         });
     });
 }
+
 main();
