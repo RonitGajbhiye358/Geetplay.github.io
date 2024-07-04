@@ -31,9 +31,10 @@ async function getSongs(folder) {
     songs = [];
     for (const element of as) {
         if (element.href.endsWith(".mp3")) {
-            songs.push(element.href.split(`/${folder}/`)[1]);
+            songs.push(decodeURIComponent(element.href.split(`/${folder}/`)[1].replace(/\+/g, ' ')));
         }
     }
+
     // Show all the songs in the playlist
     let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
 
@@ -78,18 +79,19 @@ const playMusic = (track, pause = false) => {
     currentSong.src = `/${currFolder}/` + track;
     if (!pause) {
         currentSong.play();
-        play.src = "img/svgs/pause.svg";
+        // Update the UI with current song info
         document.querySelector(".currSongInfo").innerHTML = `<video autoplay loop class="border" src="videoplayback.mp4" width="60px" height="60px" alt="MusicVideo"></video>
             <div class="songInfo normalFont">
-                <h3 class="white normalFont ">${track.replaceAll("%20", " ")}</h3>
+                <h3 class="white normalFont">${decodeURIComponent(track)}</h3>
                 <h5 class="greyFontColor normalFont">Ronit...</h5>
             </div>`;
     } else {
-        // document.querySelector(".songinfo").innerHTML = decodeURI(track)
+        // Handle pause state UI updates
         document.querySelector(".currtime").innerHTML = "00:00";
         document.querySelector(".endtime").innerHTML = "00:00";
     }
 };
+
 
 async function displayAlbum() {
     console.log("displaying album");
